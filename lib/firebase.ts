@@ -1,10 +1,10 @@
-'use client'
-
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
-import { getFirestore, Firestore, enableIndexedDbPersistence, CACHE_SIZE_UNLIMITED } from 'firebase/firestore'
-import { getAuth, Auth } from 'firebase/auth'
-import { getDatabase, Database } from 'firebase/database'
-import { getStorage, FirebaseStorage } from 'firebase/storage'
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { 
+  initializeFirestore, 
+  persistentLocalCache, 
+  persistentMultipleTabManager 
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDn3xCSu5fh_hYcZNXSsYuG4mdHsfST7c4",
@@ -13,62 +13,18 @@ const firebaseConfig = {
   storageBucket: "pronurse1.firebasestorage.app",
   messagingSenderId: "1014206351110",
   appId: "1:1014206351110:web:27c5949f8dc9a293ad4087",
-  databaseURL: "https://pronurse1-default-rtdb.firebaseio.com"
-}
+  measurementId: "G-FWTDJE2S8B"
+};
 
-// Initialize Firebase
-let app: FirebaseApp
-let db: Firestore
-let auth: Auth
-let realtimeDb: Database
-let storage: FirebaseStorage
+// تهيئة التطبيق
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-function initializeFirebase() {
-  try {
-    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
-    db = getFirestore(app)
-    auth = getAuth(app)
-    realtimeDb = getDatabase(app)
-    storage = getStorage(app)
+// حل مشكلة persistence layer والتعارض بين التبويبات
+export const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({
+    tabManager: persistentMultipleTabManager()
+  })
+});
 
-    // Enable offline persistence for Firestore
-    enableIndexedDbPersistence(db).catch((err) => {
-      if (err.code === 'failed-precondition') {
-        console.warn('Multiple tabs open: Offline persistence disabled')
-      } else if (err.code === 'unimplemented') {
-        console.warn('Browser not supported for offline persistence')
-      }
-    })
-
-    console.log('✅ Firebase initialized successfully')
-    return true
-  } catch (error) {
-    console.error('❌ Firebase initialization error:', error)
-    return false
-  }
-}
-
-// Initialize on load
-const isInitialized = initializeFirebase()
-
-export function getFirestoreDb(): Firestore { 
-  return db 
-}
-
-export function getFirebaseAuth(): Auth { 
-  return auth 
-}
-
-export function getRealtimeDb(): Database { 
-  return realtimeDb 
-}
-
-export function getFirebaseStorage(): FirebaseStorage { 
-  return storage 
-}
-
-export function isFirebaseConfigured(): boolean { 
-  return isInitialized 
-}
-
-export { app, db, auth, realtimeDb, storage }
+export const auth = getAuth(app);
+export default app;
