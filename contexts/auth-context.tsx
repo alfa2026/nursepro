@@ -218,6 +218,97 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [setSession])
 
+  const loginWithGoogle = useCallback(async () => {
+    try {
+      const auth = getFirebaseAuth()
+      const provider = new GoogleAuthProvider()
+      const result = await signInWithPopup(auth, provider)
+      
+      // محاولة الحصول على بيانات المستخدم من Firestore
+      let userData = await getDocument<User>(COLLECTIONS.USERS, result.user.uid)
+      
+      // لو المستخدم جديد، أنشئ ملف له
+      if (!userData) {
+        userData = {
+          id: result.user.uid,
+          name: result.user.displayName || '',
+          nameAr: result.user.displayName || '',
+          email: result.user.email || '',
+          employeeCode: result.user.email?.split('@')[0] || '',
+          role: 'nurse', // دور افتراضي
+          roleId: 'role-nurse',
+          department: '',
+          departmentId: '',
+          status: 'active',
+          hireDate: new Date().toISOString().split('T')[0],
+          mustChangePassword: false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+        
+        // احفظ البيانات في Firestore
+        await createDocument(COLLECTIONS.USERS, result.user.uid, userData)
+        
+        // اكتب في Audit Log
+        await createAuditLog({
+          action: 'USER_CREATED_VIA_GOOGLE',
+          userId: result.user.uid,
+          details: `User created via Google Sign-in: ${result.user.email}`,
+          timestamp: new Date().toISOString(),
+        } as any)
+      }
+      
+      setSession(userData)
+      return { success: true }
+    } catch (error: any) {
+      console.error('Google sign-in error:', error)
+      return { success: false, error: error.message || 'فشل تسجيل الدخول عبر Google' }
+    }
+  }, [setSession])
+
+  const register = useCallback(async (data: RegisterData) => {
+    try {
+      const auth = getFirebaseAuth()
+      const result = await createUserWithEmailAndPassword(auth, data.email, data.password)
+      
+      const userData: User = {
+        id: result.user.uid,
+        name: data.name,
+        nameAr: data.nameAr,
+        email: data.email,
+        employeeCode: data.name.split(' ')[0].toUpperCase() + '001',
+        role: 'nurse',
+        roleId: 'role-nurse',
+        department: data.department || '',
+        departmentId: data.departmentId || '',
+        status: 'active',
+        hireDate: new Date().toISOString().split('T')[0],
+        mustChangePassword: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+      
+      await createDocument(COLLECTIONS.USERS, result.user.uid, userData)
+      setSession(userData)
+      return { success: true }
+    } catch (error: any) {
+      return { success: false, error: error.message }
+    }
+  }, [setSession])
+
+  const changePassword = useCallback(async (userId: string, newPassword: string) => {
+    try {
+      const auth = getFirebaseAuth()
+      if (auth.currentUser) {
+        await updatePassword(auth.currentUser, newPassword)
+        return { success: true }
+      }
+      return { success: false, error: 'لا يوجد مستخدم مسجل' }
+    } catch (error: any) {
+      return { success: false, error: error.message }
+    }
+  }, [])
+
   const logout = useCallback(async () => {
     const auth = getFirebaseAuth()
     await signOut(auth)
@@ -232,6 +323,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return permissions.includes(permission)
   }, [permissions, user])
 
+  const hasAnyPermission = useCallback((perms: string[]) => {
+    if (user?.role === 'super_admin') return true
+    return perms.some(p => permissions.includes(p))
+  }, [permissions, user])
+
+  const hasAllPermissions = useCallback((perms: string[]) => {
+    if (user?.role === 'super_admin') return true
+    return perms.every(p => permissions.includes(p))
+  }, [permissions, user])
+
   const isRole = useCallback((roles: UserRole | UserRole[]) => {
     if (!user) return false
     const roleArray = Array.isArray(roles) ? roles : [roles]
@@ -241,11 +342,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider value={{
       user, firebaseUser, loading, isAuthenticated: !!user, permissions,
-      login, loginWithEmployeeCode, logout, 
-      loginWithGoogle: async () => ({ success: false }),
-      register: async () => ({ success: false }),
-      changePassword: async () => ({ success: false }),
-      hasPermission, hasAnyPermission: () => false, hasAllPermissions: () => false, isRole
+      login, loginWithEmployeeCode, loginWithGoogle, logout, 
+      register, changePassword,
+      hasPermission, hasAnyPermission, hasAllPermissions, isRole
     }}>
       {children}
     </AuthContext.Provider>
