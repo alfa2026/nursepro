@@ -158,16 +158,7 @@ export function Topbar() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Pending Approval Badge */}
-      {pendingCount > 0 && (
-        <Link href="/admin/users">
-          <Button variant="outline" size="sm" className="relative gap-2 border-amber-400 text-amber-700 hover:bg-amber-50 dark:border-amber-600 dark:text-amber-400">
-            <Shield className="h-4 w-4" />
-            <span className="hidden sm:inline text-xs font-medium">{lang === 'ar' ? 'طلبات معلّقة' : 'Pending'}</span>
-            <Badge variant="destructive" className="h-5 min-w-5 rounded-full p-0 text-xs flex items-center justify-center">{pendingCount}</Badge>
-          </Button>
-        </Link>
-      )}
+
 
       {/* Language Toggle */}
       <Button

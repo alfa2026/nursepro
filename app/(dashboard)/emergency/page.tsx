@@ -117,18 +117,21 @@ const sampleCodes: EmergencyCode[] = [
     type: 'blue',
     location: 'غرفة 301',
     department: 'ICU',
+    departmentId: 'icu',
     calledBy: 'أحمد محمد',
     calledById: '1',
     status: 'active',
     startTime: '2024-01-15T10:30:00.000Z',
     responders: ['فريق الإنعاش', 'طبيب العناية المركزة'],
     notes: 'مريض في حالة توقف قلبي',
+    createdAt: '2024-01-15T10:30:00.000Z',
   },
   {
     id: '2',
     type: 'red',
     location: 'المطبخ - الطابق الأرضي',
     department: 'الخدمات',
+    departmentId: 'services',
     calledBy: 'محمد علي',
     calledById: '2',
     status: 'resolved',
@@ -137,6 +140,7 @@ const sampleCodes: EmergencyCode[] = [
     responders: ['فريق الإطفاء', 'الأمن'],
     notes: 'دخان من أحد الأجهزة',
     outcome: 'تم السيطرة على الموقف - لا إصابات',
+    createdAt: '2024-01-15T08:15:00.000Z',
   },
 ]
 
@@ -172,12 +176,14 @@ export default function EmergencyCodesPage() {
       type: selectedCodeType,
       location: newCode.location,
       department: newCode.department,
+      departmentId: newCode.department.toLowerCase().replace(/\s/g, '-'),
       calledBy: 'المستخدم الحالي',
       calledById: 'current',
       status: 'active',
       startTime: new Date().toISOString(),
       responders: [],
       notes: newCode.notes,
+      createdAt: new Date().toISOString(),
     }
 
     setCodes([code, ...codes])

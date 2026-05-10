@@ -75,7 +75,8 @@ const sampleEquipment: Equipment[] = [
     nameAr: 'جهاز تنفس صناعي',
     serialNumber: 'VNT-2024-001',
     category: 'أجهزة تنفسية',
-    department: 'ICU',
+    departmentId: 'icu',
+    departmentName: 'ICU',
     location: 'غرفة 301',
     status: 'in_use',
     lastMaintenance: '2024-01-01',
@@ -83,6 +84,8 @@ const sampleEquipment: Equipment[] = [
     purchaseDate: '2022-06-15',
     warrantyExpiry: '2025-06-15',
     assignedTo: 'المريض أحمد محمد',
+    createdAt: '2022-06-15',
+    updatedAt: '2024-01-01',
   },
   {
     id: '2',
@@ -90,13 +93,16 @@ const sampleEquipment: Equipment[] = [
     nameAr: 'مضخة تسريب',
     serialNumber: 'INF-2024-015',
     category: 'مضخات',
-    department: 'الجراحة',
+    departmentId: 'surgery',
+    departmentName: 'الجراحة',
     location: 'غرفة 205',
     status: 'available',
     lastMaintenance: '2023-12-15',
     nextMaintenance: '2024-03-15',
     purchaseDate: '2023-01-20',
     warrantyExpiry: '2026-01-20',
+    createdAt: '2023-01-20',
+    updatedAt: '2023-12-15',
   },
   {
     id: '3',
@@ -104,7 +110,8 @@ const sampleEquipment: Equipment[] = [
     nameAr: 'جهاز مراقبة المريض',
     serialNumber: 'MON-2024-008',
     category: 'أجهزة مراقبة',
-    department: 'الطوارئ',
+    departmentId: 'er',
+    departmentName: 'الطوارئ',
     location: 'غرفة الإنعاش',
     status: 'maintenance',
     lastMaintenance: '2024-01-10',
@@ -112,6 +119,8 @@ const sampleEquipment: Equipment[] = [
     purchaseDate: '2021-08-10',
     warrantyExpiry: '2024-08-10',
     notes: 'في انتظار قطع غيار',
+    createdAt: '2021-08-10',
+    updatedAt: '2024-01-10',
   },
   {
     id: '4',
@@ -119,13 +128,16 @@ const sampleEquipment: Equipment[] = [
     nameAr: 'جهاز صدمات القلب',
     serialNumber: 'DEF-2024-003',
     category: 'أجهزة طوارئ',
-    department: 'الطوارئ',
+    departmentId: 'er',
+    departmentName: 'الطوارئ',
     location: 'عربة الإنعاش',
     status: 'available',
     lastMaintenance: '2024-01-05',
     nextMaintenance: '2024-02-05',
     purchaseDate: '2023-03-01',
     warrantyExpiry: '2028-03-01',
+    createdAt: '2023-03-01',
+    updatedAt: '2024-01-05',
   },
   {
     id: '5',
@@ -133,13 +145,16 @@ const sampleEquipment: Equipment[] = [
     nameAr: 'جهاز تخطيط القلب',
     serialNumber: 'ECG-2024-012',
     category: 'أجهزة تشخيصية',
-    department: 'الباطنية',
+    departmentId: 'internal',
+    departmentName: 'الباطنية',
     location: 'غرفة الفحص',
     status: 'broken',
     lastMaintenance: '2023-11-20',
     purchaseDate: '2020-05-15',
     warrantyExpiry: '2023-05-15',
     notes: 'يحتاج استبدال',
+    createdAt: '2020-05-15',
+    updatedAt: '2023-11-20',
   },
 ]
 
@@ -179,11 +194,11 @@ export default function EquipmentPage() {
       e.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       e.serialNumber.includes(searchQuery)
     const matchesStatus = filterStatus === 'all' || e.status === filterStatus
-    const matchesDepartment = filterDepartment === 'all' || e.department === filterDepartment
+    const matchesDepartment = filterDepartment === 'all' || e.departmentName === filterDepartment
     return matchesSearch && matchesStatus && matchesDepartment
   })
 
-  const departments = [...new Set(equipment.map((e) => e.department))]
+  const departments = [...new Set(equipment.map((e) => e.departmentName))]
 
   return (
     <div className="space-y-6">
@@ -349,7 +364,7 @@ export default function EquipmentPage() {
                         </div>
                       </TableCell>
                       <TableCell className="font-mono text-sm">{item.serialNumber}</TableCell>
-                      <TableCell>{item.department}</TableCell>
+                      <TableCell>{item.departmentName}</TableCell>
                       <TableCell>
                         <span className="flex items-center gap-1 text-sm">
                           <MapPin className="h-3 w-3" />
@@ -432,7 +447,7 @@ export default function EquipmentPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-muted-foreground">القسم</p>
-                    <p>{selectedEquipment.department}</p>
+                    <p>{selectedEquipment.departmentName}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">الموقع</p>

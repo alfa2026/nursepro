@@ -60,6 +60,7 @@ const sampleHandovers: Handover[] = [
     criticalAlerts: ['حساسية البنسلين', 'خطر السقوط'],
     pendingTasks: ['صورة أشعة الساعة 10', 'تحليل غازات الدم', 'زيارة الطبيب'],
     status: 'pending',
+    createdAt: '2024-01-15T08:00:00.000Z',
   },
   {
     id: '2',
@@ -78,6 +79,7 @@ const sampleHandovers: Handover[] = [
     criticalAlerts: [],
     pendingTasks: ['إزالة القسطرة', 'تعليمات الخروج'],
     status: 'acknowledged',
+    createdAt: '2024-01-15T14:00:00.000Z',
   },
 ]
 
@@ -162,6 +164,7 @@ export default function HandoverPage() {
         .filter((a) => a.trim()),
       pendingTasks: newHandover.pendingTasks.split('\n').filter((t) => t.trim()),
       status: 'pending',
+      createdAt: new Date().toISOString(),
     }
     setHandovers([handover, ...handovers])
     setIsDialogOpen(false)

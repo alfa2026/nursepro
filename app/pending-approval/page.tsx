@@ -20,7 +20,9 @@ export default function PendingApprovalPage() {
 
   const checkStatus = useCallback(() => {
     setChecking(true)
-    const pid = firebaseStorage.getItem('pronurse_pending_id')
+    if (typeof window === 'undefined') return
+    
+    const pid = localStorage.getItem('pronurse_pending_id')
     if (!pid) { router.push('/login'); return }
 
     const entry = getPendingUserById(pid)
@@ -37,12 +39,12 @@ export default function PendingApprovalPage() {
         role: entry.role,
         department: entry.department || 'عام',
       }
-      firebaseStorage.setItem('pronurse_user', JSON.stringify(u))
-      firebaseStorage.removeItem('pronurse_pending_id')
+      localStorage.setItem('pronurse_user', JSON.stringify(u))
+      localStorage.removeItem('pronurse_pending_id')
       setTimeout(() => router.push('/dashboard'), 1500)
     } else if (entry.status === 'rejected') {
       setStatus('rejected')
-      firebaseStorage.removeItem('pronurse_pending_id')
+      localStorage.removeItem('pronurse_pending_id')
     } else {
       setStatus('pending')
     }

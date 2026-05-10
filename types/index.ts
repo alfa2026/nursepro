@@ -510,12 +510,13 @@ export interface InventoryItem {
   maxStock: number
   departmentId: string
   departmentName: string
+  department?: string // Legacy alias
   lastRestocked?: string
   expiryDate?: string
   supplier?: string
   unitCost?: number
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 // ============================================
@@ -564,12 +565,16 @@ export interface IncidentReport {
   severity: IncidentSeverity
   departmentId: string
   departmentName: string
+  department?: string // Legacy alias
   location: string
   dateTime: string
   reportedBy: string
   reportedById: string
   description: string
   immediateActions: string
+  patientInvolved?: boolean
+  patientId?: string
+  patientName?: string
   witnesses?: string[]
   rootCause?: string
   correctiveActions?: string

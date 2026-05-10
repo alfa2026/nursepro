@@ -15,7 +15,7 @@ import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase'
 import {
   getDocument,
   getUserByEmployeeCode,
-  createDocument,
+  createDocumentWithId,
   updateDocument,
   createAuditLog,
 } from '@/lib/firebase-services'
@@ -112,8 +112,12 @@ export const DEMO_USERS: User[] = [
 export const DEMO_EMPLOYEES = DEMO_USERS
 
 const DEMO_PASSWORDS: Record<string, string> = {
-  'ADM001': 'admin123',
-  'admin@pronurse.com': 'admin123',
+  'ADM001': 'ADM001',
+  'admin@pronurse.com': 'ADM001',
+  'HR001': 'HR001',
+  'hr@pronurse.com': 'HR001',
+  'NRS001': 'NRS001',
+  'nurse@pronurse.com': 'NRS001',
 }
 
 // ============================================
@@ -217,7 +221,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(demoUser)
         return { success: true }
       }
-      return { success: false, error: 'كود الموظف غير صحيح أو السحابة غير متصلة' }
+      return { success: false, error: 'كود الموظف غي�� صحيح أو السحابة غير متصلة' }
     }
   }, [setSession])
 
@@ -250,7 +254,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         
         // احفظ البيانات في Firestore
-        await createDocument(COLLECTIONS.USERS, result.user.uid, userData)
+        await createDocumentWithId(COLLECTIONS.USERS, result.user.uid, userData)
         
         // اكتب في Audit Log
         await createAuditLog({
@@ -291,7 +295,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         updatedAt: new Date().toISOString(),
       }
       
-      await createDocument(COLLECTIONS.USERS, result.user.uid, userData)
+      await createDocumentWithId(COLLECTIONS.USERS, result.user.uid, userData)
       setSession(userData)
       return { success: true }
     } catch (error: any) {

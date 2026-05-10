@@ -83,6 +83,7 @@ const sampleTasks: NursingTask[] = [
     assignedToId: 'S001',
     dueTime: '2024-01-15T10:00:00.000Z',
     status: 'pending',
+    createdAt: '2024-01-15T08:00:00.000Z',
   },
   {
     id: '2',
@@ -97,6 +98,7 @@ const sampleTasks: NursingTask[] = [
     assignedToId: 'S001',
     dueTime: '2024-01-15T10:30:00.000Z',
     status: 'in_progress',
+    createdAt: '2024-01-15T08:00:00.000Z',
   },
   {
     id: '3',
@@ -111,6 +113,7 @@ const sampleTasks: NursingTask[] = [
     assignedToId: 'S002',
     dueTime: '2024-01-15T11:00:00.000Z',
     status: 'pending',
+    createdAt: '2024-01-15T08:00:00.000Z',
   },
   {
     id: '4',
@@ -123,6 +126,7 @@ const sampleTasks: NursingTask[] = [
     assignedToId: 'S001',
     dueTime: '2024-01-15T14:00:00.000Z',
     status: 'pending',
+    createdAt: '2024-01-15T08:00:00.000Z',
   },
   {
     id: '5',
@@ -137,6 +141,7 @@ const sampleTasks: NursingTask[] = [
     assignedToId: 'S001',
     dueTime: '2024-01-15T09:00:00.000Z',
     status: 'overdue',
+    createdAt: '2024-01-15T08:00:00.000Z',
   },
   {
     id: '6',
@@ -153,6 +158,7 @@ const sampleTasks: NursingTask[] = [
     status: 'completed',
     completedAt: '2024-01-15T11:45:00.000Z',
     completedBy: 'سارة محمد',
+    createdAt: '2024-01-15T08:00:00.000Z',
   },
 ]
 
