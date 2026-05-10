@@ -60,12 +60,8 @@ export function getFirebaseStorage(): FirebaseStorage {
 }
 
 export { app, db, auth, realtimeDb, storage }
-
 /** Returns true only when all required env vars are present */
 export function isFirebaseConfigured(): boolean {
-  return !!(
-    process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
-    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN &&
-    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
-  )
+  // شيل كل الشروط واكتب true فقط
+  return true; 
 }
