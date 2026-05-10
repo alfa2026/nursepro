@@ -6,62 +6,30 @@ import { getAuth, Auth } from 'firebase/auth'
 import { getDatabase, Database } from 'firebase/database'
 import { getStorage, FirebaseStorage } from 'firebase/storage'
 
-// Firebase configuration - Replace with your own Firebase config
+// إدخال بياناتك مباشرة لضمان الاتصال 100%
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || '',
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || '',
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || '',
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || '',
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '',
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '',
-  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || '',
+  apiKey: "AIzaSyDn3xCSu5fh_hYcZNXSsYuG4mdHsfST7c4",
+  authDomain: "pronurse1.firebaseapp.com",
+  projectId: "pronurse1",
+  storageBucket: "pronurse1.firebasestorage.app",
+  messagingSenderId: "1014206351110",
+  appId: "1:1014206351110:web:27c5949f8dc9a293ad4087",
+  databaseURL: "https://pronurse1-default-rtdb.firebaseio.com"
 }
 
 // Initialize Firebase
-let app: FirebaseApp | undefined
-let db: Firestore | undefined
-let auth: Auth | undefined
-let realtimeDb: Database | undefined
-let storage: FirebaseStorage | undefined
+let app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+const db = getFirestore(app)
+const auth = getAuth(app)
+const realtimeDb = getDatabase(app)
+const storage = getStorage(app)
 
-function getFirebaseApp(): FirebaseApp {
-  if (!app) {
-    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
-  }
-  return app
-}
+export function getFirestoreDb(): Firestore { return db }
+export function getFirebaseAuth(): Auth { return auth }
+export function getRealtimeDb(): Database { return realtimeDb }
+export function getFirebaseStorage(): FirebaseStorage { return storage }
 
-export function getFirestoreDb(): Firestore {
-  if (!db) {
-    db = getFirestore(getFirebaseApp())
-  }
-  return db
-}
-
-export function getFirebaseAuth(): Auth {
-  if (!auth) {
-    auth = getAuth(getFirebaseApp())
-  }
-  return auth
-}
-
-export function getRealtimeDb(): Database {
-  if (!realtimeDb) {
-    realtimeDb = getDatabase(getFirebaseApp())
-  }
-  return realtimeDb
-}
-
-export function getFirebaseStorage(): FirebaseStorage {
-  if (!storage) {
-    storage = getStorage(getFirebaseApp())
-  }
-  return storage
-}
+// إجبار البرنامج على اعتبار السحابة متصلة دائماً
+export function isFirebaseConfigured(): boolean { return true }
 
 export { app, db, auth, realtimeDb, storage }
-/** Returns true only when all required env vars are present */
-export function isFirebaseConfigured(): boolean {
-  // شيل كل الشروط واكتب true فقط
-  return true; 
-}
