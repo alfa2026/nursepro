@@ -36,7 +36,7 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<{ success: boolean; error?: string }>
   logout: () => Promise<void>
   register: (data: RegisterData) => Promise<{ success: boolean; error?: string }>
-  changePassword: (currentPassword: string, newPassword: string) => Promise<{ success: boolean; error?: string }>
+  changePassword: (userId: string, newPassword: string) => Promise<{ success: boolean; error?: string }>
   hasPermission: (permission: string) => boolean
   hasAnyPermission: (permissions: string[]) => boolean
   hasAllPermissions: (permissions: string[]) => boolean
@@ -57,7 +57,7 @@ interface RegisterData {
 // Demo Users (Fixed Arabic Language)
 // ============================================
 
-const DEMO_USERS: User[] = [
+export const DEMO_USERS: User[] = [
   {
     id: 'demo-super-admin',
     name: 'Ahmed Al-Rashid',
@@ -108,6 +108,9 @@ const DEMO_USERS: User[] = [
   }
 ]
 
+// Alias for backwards compatibility
+export const DEMO_EMPLOYEES = DEMO_USERS
+
 const DEMO_PASSWORDS: Record<string, string> = {
   'ADM001': 'admin123',
   'admin@pronurse.com': 'admin123',
@@ -117,7 +120,7 @@ const DEMO_PASSWORDS: Record<string, string> = {
 // Permissions (Roles logic)
 // ============================================
 
-const ROLE_PERMISSIONS: Record<string, string[]> = {
+export const ROLE_PERMISSIONS: Record<string, string[]> = {
   super_admin: ['dashboard.view', 'dashboard.manage', 'users.view', 'users.create', 'users.edit', 'settings.view', 'settings.edit'],
   nurse: ['dashboard.view', 'attendance.view', 'reports.create'],
   // أضف باقي الأدوار هنا حسب حاجتك
@@ -356,5 +359,3 @@ export function useAuth() {
   if (!context) throw new Error('useAuth must be used within an AuthProvider')
   return context
 }
-
-export { DEMO_USERS, ROLE_PERMISSIONS }
