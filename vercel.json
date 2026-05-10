@@ -4,12 +4,12 @@
   "installCommand": "npm install",
   "devCommand": "npm run dev",
   "env": {
-    "NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyAzDTplWpxnDN0ZNIYA20uzavzMkun4x1g",
-    "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": "@firebase-auth-domain",
-    "NEXT_PUBLIC_FIREBASE_PROJECT_ID": "@firebase-project-id",
-    "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET": "@firebase-storage-bucket",
-    "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "@firebase-messaging-sender-id",
-    "NEXT_PUBLIC_FIREBASE_APP_ID": "@firebase-app-id",
-    "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID": "@firebase-measurement-id"
+    "NEXT_PUBLIC_FIREBASE_API_KEY": "AIzaSyAzDTplWpxnDN0ZNIYA20uzavzMkun4x1g",
+    "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": "nursepro2.firebaseapp.com",
+    "NEXT_PUBLIC_FIREBASE_PROJECT_ID": "nursepro2",
+    "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET": "nursepro2.firebasestorage.app",
+    "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "1082526397183",
+    "NEXT_PUBLIC_FIREBASE_APP_ID": "1:1082526397183:web:fb2e9825b8a8a1ee8852ca",
+    "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID": "G-DGPQGGLHQT"
   }
 }
