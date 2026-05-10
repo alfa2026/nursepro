@@ -4,7 +4,7 @@
   "installCommand": "npm install",
   "devCommand": "npm run dev",
   "env": {
-    "NEXT_PUBLIC_FIREBASE_API_KEY": "@firebase-api-key",
+    "NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyAzDTplWpxnDN0ZNIYA20uzavzMkun4x1g",
     "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": "@firebase-auth-domain",
     "NEXT_PUBLIC_FIREBASE_PROJECT_ID": "@firebase-project-id",
     "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET": "@firebase-storage-bucket",
