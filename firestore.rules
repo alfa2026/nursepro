@@ -1,0 +1,234 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper functions ─────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isSuperAdmin() {
+      return isAuthenticated() && getUserRole() == 'super_admin';
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() in ['super_admin', 'hospital_admin'];
+    }
+
+    function isHR() {
+      return isAuthenticated() && getUserRole() in ['super_admin', 'hospital_admin', 'hr'];
+    }
+
+    function isManager() {
+      return isAuthenticated() && getUserRole() in ['super_admin', 'hospital_admin', 'hr', 'head_nurse', 'department_manager'];
+    }
+
+    // ── Users ────────────────────────────────────────────────
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isOwner(userId) || isAdmin() || isHR();
+      allow delete: if isSuperAdmin();
+    }
+
+    // ── Roles ────────────────────────────────────────────────
+    match /roles/{roleId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ── Permissions ──────────────────────────────────────────
+    match /permissions/{permId} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+
+    // ── Departments ──────────────────────────────────────────
+    match /departments/{deptId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin() || isHR();
+      allow delete: if isSuperAdmin();
+    }
+
+    // ── Shifts & Scheduling ──────────────────────────────────
+    match /shifts/{shiftId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager();
+      allow delete: if isAdmin();
+    }
+
+    match /shiftTemplates/{templateId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    // ── Attendance ───────────────────────────────────────────
+    match /attendance/{recordId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isManager();
+      allow delete: if isAdmin();
+    }
+
+    // ── Leave Requests ───────────────────────────────────────
+    match /leaveRequests/{requestId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isManager() || resource.data.userId == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+
+    match /leaveBalances/{balanceId} {
+      allow read: if isAuthenticated();
+      allow write: if isHR();
+    }
+
+    // ── Notifications ────────────────────────────────────────
+    match /notifications/{notifId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // ── Messages ─────────────────────────────────────────────
+    match /messages/{messageId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isOwner(resource.data.fromId) || isAdmin();
+    }
+
+    // ── Reports ──────────────────────────────────────────────
+    match /reports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ── Audit Logs ───────────────────────────────────────────
+    match /auditLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+
+    // ── Settings ─────────────────────────────────────────────
+    match /settings/{settingId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // ── Equipment ────────────────────────────────────────────
+    match /equipment/{equipId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager();
+      allow delete: if isAdmin();
+    }
+
+    // ── Inventory ────────────────────────────────────────────
+    match /inventory/{itemId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager();
+      allow delete: if isAdmin();
+    }
+
+    // ── Training & Certifications ────────────────────────────
+    match /training/{trainingId} {
+      allow read: if isAuthenticated();
+      allow write: if isHR() || isManager();
+    }
+
+    match /certifications/{certId} {
+      allow read: if isAuthenticated();
+      allow write: if isHR() || isManager();
+    }
+
+    // ── Incidents ────────────────────────────────────────────
+    match /incidents/{incidentId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isManager();
+      allow delete: if isAdmin();
+    }
+
+    // ── Quality Indicators ───────────────────────────────────
+    match /qualityIndicators/{indicatorId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    // ── Payroll ──────────────────────────────────────────────
+    match /payroll/{payrollId} {
+      allow read: if isHR() || isOwner(resource.data.userId);
+      allow create, update: if isHR();
+      allow delete: if isSuperAdmin();
+    }
+
+    // ── Emergency Codes ──────────────────────────────────────
+    match /emergencyCodes/{codeId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ── Activities ───────────────────────────────────────────
+    match /activities/{activityId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+
+    // ── Organization ─────────────────────────────────────────
+    match /orgUnits/{unitId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /positions/{posId} {
+      allow read: if isAuthenticated();
+      allow write: if isHR() || isAdmin();
+    }
+
+    match /dynamicRoles/{roleId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /workflows/{workflowId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /workflowInstances/{instanceId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /modules/{moduleId} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+
+    match /widgets/{widgetId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // ── Catch-all deny ───────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

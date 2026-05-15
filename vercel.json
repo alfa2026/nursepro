@@ -1,0 +1,15 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "env": {
+    "NEXT_PUBLIC_FIREBASE_API_KEY": "AIzaSyDn3xCSu5fh_hYcZNXSsYuG4mdHsfST7c4",
+    "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": "pronurse1.firebaseapp.com",
+    "NEXT_PUBLIC_FIREBASE_PROJECT_ID": "pronurse1",
+    "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET": "pronurse1.firebasestorage.app",
+    "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "1014206351110",
+    "NEXT_PUBLIC_FIREBASE_APP_ID": "1:1014206351110:web:27c5949f8dc9a293ad4087",
+    "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID": "G-FWTDJE2S8B"
+  }
+}
